@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <title>Nahuatl Numberator</title>
+    <script type="text/javascript" src="attjs/att.js"></script>
+    <script type="text/javascript" src="numbers.js"></script>
+    <style>
+      .match { color: green; }
+      .empty { color: red; }
+    </style>
+  </head>
+  <body>
+    <input type="text" id="word" value="ome pohual huan ome" oninput="change_word();"/>
+    <input type="number" id="num" min="1" max="7999" value="41" onchange="change_num();"/>
+    <h2 id="disp"></h2>
+    <script type="text/javascript">
+      var W2N = new ATT(Word2NumAtt);
+      var N2W = new ATT(Num2WordAtt);
+
+      var word_in = document.getElementById('word');
+      var num_in = document.getElementById('num');
+      var disp_h2 = document.getElementById('disp');
+
+      var word_hist = [['', W2N.get_initial(), new Set()]];
+      
+      function change_word() {
+          let word = word_in.value;
+          if (word_hist.length > word.length + 1) {
+              word_hist = word_hist.slice(0, word.length+1);
+          }
+          for (let i = 0; i < word.length; i++) {
+              if (i + 1 < word_hist.length && word_hist[i+1][0] != word[i]) {
+                  word_hist = word_hist.slice(0, i+1);
+              }
+              if (i + 1 == word_hist.length) {
+                  let new_ctx = W2N.step(word_hist[i][1], word[i]);
+                  let fin = W2N.get_finals(new_ctx);
+                  word_hist.push([word[i], new_ctx, fin]);
+              }
+          }
+          let last_num = '';
+          let match = '';
+          let middle = '';
+          let cur = '';
+          let fail = false;
+          for (let state of word_hist) {
+              if (Object.keys(state[1]).length == 0 || fail) {
+                  if (!fail) {
+                      middle = cur;
+                      cur = '';
+                      fail = true;
+                  }
+                  cur += state[0];
+              } else {
+                  cur += state[0];
+                  if (state[2].size > 0) {
+                      match += cur;
+                      cur = '';
+                      for (let val of state[2].values()) {
+                          last_num = val;
+                          break;
+                      }
+                  }
+              }
+          }
+          let disp = '';
+          disp += '<span class="match">'+match+'</span>';
+          if (fail) {
+              disp += middle;
+              disp += '<span class="empty">'+cur+'</span>';
+          } else {
+              disp += cur;
+          }
+          if (last_num.length > 0) {
+              last_num = parseInt(last_num, 20).toString(10);
+              disp += ' = ' + last_num;
+          }
+          num_in.value = last_num;
+          disp_h2.innerHTML = disp;
+      }
+
+      function change_num() {
+          let val = parseInt(num_in.value).toString(20);
+          console.log('val', val);
+          let res = N2W.lookup(val);
+          console.log('res', res);
+          for (let str of res.values()) {
+              word_in.value = str;
+          }
+          change_word();
+      }
+
+      change_word();
+    </script>
+  </body>
+</html>

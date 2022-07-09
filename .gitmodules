@@ -1,0 +1,3 @@
+[submodule "attjs"]
+	path = attjs
+	url = git@github.com:mr-martian/attjs.git

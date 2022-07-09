@@ -1,0 +1,40 @@
+PATTERNS
+N1-19
+
+[sepohual:1] AND0-19
+N2-19 [\ pohual:] AND0-19
+
+N1-19 [\ tsontli:0] AND0-19
+N1-19 [\ tsontli:] AND [sepohual:1] AND0-19
+N1-19 [\ tsontli:] AND N2-19 [\ pohual:] AND0-19
+
+PATTERN AND0-19
+[:0]
+AND N1-19
+
+PATTERN N1-19
+[se:1]
+N2-19
+
+LEXICON AND
+\ huan\ :
+
+LEXICON N2-19
+ome:2
+eyi:3
+nahui:4
+makuil:5
+chikuasen:6
+chikome:7
+chikeyi:8
+chiknahui:9
+majtakti:a
+majtakti\ huan\ se:b
+majtakti\ huan\ ome:c
+majtakti\ huan\ eyi:d
+majtakti\ huan\ nahui:e
+kaxtol:f
+kaxtol\ huan\ se:g
+kaxtol\ huan\ ome:h
+kaxtol\ huan\ eyi:i
+kaxtol\ huan\ nahui:j
